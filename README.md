@@ -1,129 +1,115 @@
-# ♻️ EcoScan Desktop - Clasificador de Residuos
+# EcoScan Desktop - Waste Classification System
 
-**Aplicación inteligente de clasificación de residuos usando Transfer Learning y visión por computadora.**
+Intelligent waste classification application using Transfer Learning and computer vision.
 
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 ![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.x-red.svg)
 
----
+## Overview
 
-## 📋 Descripción
+EcoScan Desktop is a web application that automatically classifies waste into two categories:
+- Plastic (PET, HDPE, etc.)
+- Paper/Cardboard
 
-EcoScan Desktop es una aplicación web que clasifica automáticamente residuos en dos categorías:
-- **🟦 Plástico (PET, HDPE, etc.)**
-- **📄 Papel/Cartón**
+It uses Transfer Learning with the MobileNetV2 architecture pre-trained on ImageNet, achieving 98.48% accuracy even with a small dataset.
 
-Utiliza **Transfer Learning** con la arquitectura **MobileNetV2** preentrenada en ImageNet, logrando una **precisión del 98.48%** incluso con un dataset pequeño.
+## Features
 
----
+- Real-time classification: Analyzes images in <50ms
+- Intuitive web interface: Built with Streamlit
+- Transfer Learning: Reuses ImageNet features
+- High accuracy: 98.48% on training data
+- Interactive mode: Upload images or use the test dataset
 
-## 🎯 Características
+## Model Architecture
 
-✅ **Clasificación en tiempo real** - Analiza imágenes en <50ms  
-✅ **Interfaz web intuitiva** - Construida con Streamlit  
-✅ **Transfer Learning** - Reutiliza características de ImageNet  
-✅ **Alta precisión** - 98.48% en datos de entrenamiento  
-✅ **Modo interactivo** - Sube imágenes o usa el dataset de prueba  
+### Phase 1: Feature Extraction
+- Epochs: 5
+- Learning Rate: 1e-3
+- Frozen Layers: Yes (MobileNetV2 base frozen)
+- Objective: Learn waste-specific features
 
----
+### Phase 2: Fine-Tuning
+- Epochs: 3
+- Learning Rate: 1e-5
+- Last 20 unfrozen layers: Yes
+- Objective: Precisely adjust to our dataset
 
-## 🏗️ Arquitectura del Modelo
-
-### Fase 1: Feature Extraction
-- **Epocas**: 5
-- **Learning Rate**: 1e-3
-- **Capas congeladas**: Sí (MobileNetV2 base frozen)
-- **Objetivo**: Aprender características específicas de residuos
-
-### Fase 2: Fine-Tuning
-- **Epocas**: 3
-- **Learning Rate**: 1e-5
-- **Últimas 20 capas desentrenadas**: Sí
-- **Objetivo**: Ajustar precisamente a nuestro dataset
-
-### Arquitectura de Capas
+### Layer Architecture
 ```
 Input (224x224x3)
-    ↓
-MobileNetV2 (2.25M parámetros congelados)
-    ↓
+    |
+MobileNetV2 (2.25M frozen parameters)
+    |
 GlobalAveragePooling2D
-    ↓
+    |
 Dense(128, relu) + Dropout(0.5)
-    ↓
+    |
 Dense(1, sigmoid)
-    ↓
-Output (Plástico: 0, Papel: 1)
+    |
+Output (Plastic: 0, Paper: 1)
 ```
 
----
+## Performance Metrics
 
-## 📊 Resultados
+| Metric | Value |
+|--------|-------|
+| Accuracy | 98.48% |
+| Loss | 0.0871 |
+| Inference Time | <50ms |
+| Model Size | 9.24 MB |
+| Trainable Parameters | 164,097 |
 
-| Métrica | Valor |
-|---------|-------|
-| **Precisión** | 98.48% |
-| **Pérdida** | 0.0871 |
-| **Tiempo inferencia** | <50ms |
-| **Tamaño del modelo** | 9.24 MB |
-| **Parámetros entrenables** | 164,097 |
+## Installation
 
----
-
-## 🚀 Instalación
-
-### Requisitos
+### Requirements
 - Python 3.8+
-- pip o conda
+- pip or conda
 
 ### Setup
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/TuUsuario/ecoscan-desktop.git
+# 1. Clone the repository
+git clone https://github.com/YourUsername/ecoscan-desktop.git
 cd ecoscan-desktop
 
-# 2. Crear entorno virtual
+# 2. Create virtual environment
 python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-# 3. Instalar dependencias
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Descargar el modelo entrenado
-# (Consulta la sección "Modelo Preentrenado" abajo)
+# 4. Download the pre-trained model
+# (See "Pre-trained Model" section below)
 ```
 
----
+## Usage
 
-## 🎮 Usar la Aplicación
-
-### Ejecutar la app web
+### Run the web application
 ```bash
 streamlit run app_residuos.py
 ```
-Luego abre: **http://localhost:8501**
+Then open: http://localhost:8501
 
-### Entrenar el modelo desde cero
+### Train the model from scratch
 ```bash
 python clasificador_residuos.py
 ```
 
----
-
-## 📁 Estructura del Proyecto
+## Project Structure
 
 ```
-📦 ecoscan-desktop/
-├── 📄 app_residuos.py              # App principal (Streamlit)
-├── 📄 clasificador_residuos.py     # Script de entrenamiento
-├── 📄 README.md                    # Este archivo
-├── 📄 requirements.txt             # Dependencias
-├── 📄 .gitignore                   # Archivos ignorados
-├── 📊 entrenamiento_residuos.png   # Gráficas de entrenamiento
-└── 🗂️ dataset_reciclaje/          # [No incluido - muy pesado]
+ecoscan-desktop/
+├── app_residuos.py              # Main application (Streamlit)
+├── clasificador_residuos.py     # Training script
+├── README.md                    # This file
+├── requirements.txt             # Dependencies
+├── .gitignore                   # Ignored files
+├── entrenamiento_residuos.png   # Training graphs
+└── dataset_reciclaje/          # [Not included - too large]
     ├── entrenamiento/
     │   ├── plastico/
     │   └── papel/
@@ -132,142 +118,117 @@ python clasificador_residuos.py
         └── papel/
 ```
 
----
+## Pre-trained Model
 
-## 🤖 Modelo Preentrenado
+The trained model (modelo_clasificador_residuos.h5) is NOT included in the repository due to its size (9.24 MB).
 
-El modelo entrenado (`modelo_clasificador_residuos.h5`) **no está incluido en el repositorio**  
-por su tamaño (9.24 MB).
+To obtain it:
 
-**Para obtenerlo:**
-
-1. **Opción A: Entrenar localmente**
+1. Option A: Train locally
    ```bash
    python clasificador_residuos.py
    ```
 
-2. **Opción B: Descargar desde releases**
-   - Ve a [Releases](https://github.com/TuUsuario/ecoscan-desktop/releases)
-   - Descarga `modelo_clasificador_residuos.h5`
-   - Colócalo en la raíz del proyecto
+2. Option B: Download from releases
+   - Go to Releases
+   - Download modelo_clasificador_residuos.h5
+   - Place it in the project root
 
----
+## Dataset
 
-## 📊 Dataset
+The dataset includes 66 training images:
+- 33 plastic images
+- 33 paper/cardboard images
 
-El dataset incluye **66 imágenes** de entrenamiento:
-- 33 imágenes de **plástico**
-- 33 imágenes de **papel/cartón**
-
-**Estructura esperada:**
+Expected structure:
 ```
 dataset_reciclaje/
 ├── entrenamiento/
-│   ├── plastico/ (30 imágenes)
-│   └── papel/    (30 imágenes)
+│   ├── plastico/ (30 images)
+│   └── papel/    (30 images)
 └── validacion/
-    ├── plastico/ (5 imágenes)
-    └── papel/    (5 imágenes)
+    ├── plastico/ (5 images)
+    └── papel/    (5 images)
 ```
 
----
+## Training Graphs
 
-## 📈 Gráficas de Entrenamiento
+Performance curves are automatically generated:
+- entrenamiento_residuos.png - Learning curves
 
-Las gráficas de pérdida y precisión se generan automáticamente:
-- **entrenamiento_residuos.png** - Curvas de aprendizaje
+## Technologies
 
-![Ejemplo de gráficas](entrenamiento_residuos.png)
+- TensorFlow/Keras: Deep learning framework
+- MobileNetV2: Pre-trained architecture
+- Streamlit: Interactive web framework
+- NumPy: Numerical computing
+- Pandas: Data analysis
+- PIL: Image processing
+- Matplotlib: Visualization
 
----
-
-## 🔧 Tecnologías Utilizadas
-
-- **TensorFlow/Keras** - Framework de deep learning
-- **MobileNetV2** - Arquitectura preentrenada
-- **Streamlit** - Framework web interactivo
-- **NumPy** - Computación numérica
-- **Pandas** - Análisis de datos
-- **PIL** - Procesamiento de imágenes
-- **Matplotlib** - Visualización
-
----
-
-## 📝 Cómo Funciona
+## How It Works
 
 ### 1. Input
-- Usuario sube una imagen JPG/PNG
+- User uploads a JPG/PNG image
 
-### 2. Preprocesamiento
-- Redimensiona a 224x224 píxeles
-- Normaliza valores a [0, 1]
-- Expande dimensión de batch
+### 2. Preprocessing
+- Resizes to 224x224 pixels
+- Normalizes values to [0, 1]
+- Expands batch dimension
 
-### 3. Inferencia
-- Pasa por MobileNetV2 (extrae características)
-- Pasa por capas densas personalizadas
-- Obtiene probabilidad de cada clase
+### 3. Inference
+- Passes through MobileNetV2 (extracts features)
+- Passes through custom dense layers
+- Obtains probability for each class
 
-### 4. Clasificación
+### 4. Classification
 ```
-Si salida < 0.5 → PLÁSTICO 🟦
-Si salida ≥ 0.5 → PAPEL 📄
+If output < 0.5 then PLASTIC
+If output >= 0.5 then PAPER
 ```
 
 ### 5. Output
-- Muestra clase predicha
-- Muestra confianza (%)
-- Detalles técnicos opcionales
+- Shows predicted class
+- Shows confidence (%)
+- Optional technical details
 
----
+## Learning Concepts
 
-## 🎓 Conceptos Aprendidos
+- Transfer Learning
+- Feature Extraction vs Fine-Tuning
+- Convolutional Neural Networks (CNN)
+- Data Augmentation
+- Batch Normalization
+- Dropout for regularization
+- Early Stopping
+- Model Evaluation
 
-- ✅ Transfer Learning
-- ✅ Feature Extraction vs Fine-Tuning
-- ✅ Convolutional Neural Networks (CNN)
-- ✅ Data Augmentation
-- ✅ Batch Normalization
-- ✅ Dropout para regularización
-- ✅ Early Stopping
-- ✅ Evaluación de modelos
+## License
 
----
+This project is under the MIT license. See LICENSE for details.
 
-## 📄 Licencia
+## Contributing
 
-Este proyecto está bajo la licencia **MIT**. Ver [LICENSE](LICENSE) para más detalles.
+Contributions are welcome. For major changes:
 
----
+1. Fork the repository
+2. Create a branch for your feature (git checkout -b feature/MyFeature)
+3. Commit your changes (git commit -m 'Add MyFeature')
+4. Push to the branch (git push origin feature/MyFeature)
+5. Open a Pull Request
 
-## 🤝 Contribuciones
+## Contact
 
-Las contribuciones son bienvenidas. Para cambios grandes:
+- Author: Your Name
+- Email: your.email@example.com
+- GitHub: @YourUsername
 
-1. Fork el repositorio
-2. Crea una rama para tu feature (`git checkout -b feature/MiFeature`)
-3. Commit tus cambios (`git commit -m 'Agrega MiFeature'`)
-4. Push a la rama (`git push origin feature/MiFeature`)
-5. Abre un Pull Request
-
----
-
-## 📞 Contacto
-
-- 👤 **Autor**: Tu Nombre
-- 📧 **Email**: tu.email@ejemplo.com
-- 🔗 **GitHub**: [@TuUsuario](https://github.com/TuUsuario)
-
----
-
-## 🙌 Agradecimientos
+## Acknowledgments
 
 - TensorFlow & Keras team
-- Streamlit por la excelente librería
-- Dataset de residuos recopilado localmente
+- Streamlit for the excellent library
+- Waste dataset collected locally
 
----
+Made with and by [Your Name]
 
-**Hecho con ♻️ y 🤖 por [Tu Nombre]**
-
-Última actualización: **11 de Marzo de 2026**
+Last updated: March 11, 2026
