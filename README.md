@@ -219,9 +219,9 @@ Contributions are welcome. For major changes:
 
 ## Contact
 
-- Author: Your Name
-- Email: your.email@example.com
-- GitHub: @YourUsername
+- Author: Israel Rodríguez González
+- Email: israelrodgonz@gmail.com
+- GitHub: @isra19dev
 
 ## Acknowledgments
 
