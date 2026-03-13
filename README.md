@@ -229,6 +229,6 @@ Contributions are welcome. For major changes:
 - Streamlit for the excellent library
 - Waste dataset collected locally
 
-Made with and by [Your Name]
+Made with and by Israel Rodriguez González
 
 Last updated: March 11, 2026
